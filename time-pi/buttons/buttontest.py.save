@@ -1,0 +1,54 @@
+import RPi.GPIO as GPIO
+import time
+
+class ButtonManager:
+    def __init__(self):
+        # Define GPIO pins for the buttons
+        self.button_pins = {
+            22: self.on_button_1,
+            23: self.on_button_2,
+            24: self.on_button_3,
+            10: self.on_button_4,
+            9:  self.on_button_5,
+            25: self.on_button_6,
+            11: self.on_button_7
+        }
+
+        GPIO.setmode(GPIO.BCM)
+
+        for pin, callback in self.button_pins.items():
+            GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            GPIO.add_event_detect(pin, GPIO.FALLING, callback=self.wrap_callback(callback), bouncetime=200)
+
+    def wrap_callback(self, callback):
+        def wrapped(channel):
+            time.sleep(0.01)  # Extra debounce buffer
+            if GPIO.input(channel) == 0:
+                callback()
+        return wrapped
+
+    # --- Button-specific callbacks ---
+    def on_button_1(self):
+        print("Button 1 pressed")
+
+    def on_button_2(self):
+        print("Button 2 pressed")
+
+    def on_button_3(self):
+        print("Button 3 pressed")
+
+    def on_button_4(self):
+        print("Button 4 pressed")
+
+    def on_button_5(self):
+        print("Button 5 pressed")
+
+    def on_button_6(self):
+        print("Button 6 pressed")
+
+    def on_button_7(self):
+        print("Button 7 pressed")
+
+    def cleanup(self):
+        GPIO.cleanup()
+
