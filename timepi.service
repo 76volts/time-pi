@@ -1,0 +1,17 @@
+[Unit]
+Description=Time-Pi LCD Menu and Clock
+After=network.target pigpiod.service
+Wants=pigpiod.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /home/aaron/time-pi/lcdmenu.py
+WorkingDirectory=/home/aaron/time-pi
+Restart=always
+RestartSec=5
+User=aaron
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
